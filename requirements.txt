@@ -1,0 +1,11 @@
+aspose-words==21.11.0
+fire==0.4.0
+fonttools==4.28.5
+lxml==4.7.1
+numpy==1.22.0
+opencv-python==4.5.5.62
+pdf2docx==0.5.2
+PyMuPDF==1.19.4
+python-docx==0.8.11
+six==1.16.0
+termcolor==1.1.0
