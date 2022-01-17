@@ -1,7 +1,8 @@
 from pdf2docx import parse
 from typing import Tuple
 import aspose.words as aw
-
+import random
+import string
 
 # input_file = 'zeinab_CV.pdf'
 # output_file = 'cv.docx'
@@ -11,6 +12,12 @@ import aspose.words as aw
 # print("## Summary ########################################################")
 # print("\n".join("{}:{}".format(i, j) for i, j in summary.items()))
 # print("###################################################################")
+
+def random_string_generator(): 
+    chars = string.ascii_letters + string.punctuation
+    size = 12
+    return ''.join(random.choice(chars) for x in range(size))
+
 
 
 def convert_pdf_to_docx(filename): 

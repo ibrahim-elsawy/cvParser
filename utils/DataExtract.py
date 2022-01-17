@@ -27,11 +27,22 @@ class Extraction():
 		searches= self.data.read('points')
 		headers = self.dx.searchDoc(listOfSearch=searches,listOfParagraph=self.doc.paragraphs, numRows=13)
 		for i, header in enumerate(headers):
-			sectionOfHeaders[header[0]] = ''
+			sectionOfHeaders[header[0]] = [] 
 			if i == len(headers)-1:
 				for index in range(header[1], len(self.doc.paragraphs)): 
-					sectionOfHeaders[header[0]] += ' ' + self.doc.paragraphs[index].text
+					sectionOfHeaders[header[0]].append(self.doc.paragraphs[index].text)
 				continue
-			for index in range(header[1], headers[i+1][1]):
-				sectionOfHeaders[header[0]] += self.doc.paragraphs[index].text
+			for index in range(header[1]+1, headers[i+1][1]):
+				sectionOfHeaders[header[0]] += [self.doc.paragraphs[index].text]
 		return sectionOfHeaders
+	
+	def parseResume(self):
+
+		#FIXME summary is hardcoded !!!!!!!!!!!!
+		
+		data = self.extractSectionOfHeader()
+		if 'summary' not in data:
+			phones, emails, links = self.dx.getInfo(self.doc.paragraphs)
+			data['summary'] = emails + links + phones
+			return data
+		return data

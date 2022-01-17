@@ -33,4 +33,15 @@ class Database():
 		c.execute(f'SELECT COUNT(*) from {table_name}') 
 		result = c.fetchone() 
 		return result[0]
+	
+	def getColumnsNames(self, table_name):
+		columns = []
+		conn = sqlite3.connect(self.dbname)
+		c = conn.cursor()
+		data = c.execute(f"SELECT * FROM {table_name}")
+		for col in data.description:
+			columns.append(col[0])
+		return columns
+		
+
 
