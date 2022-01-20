@@ -73,16 +73,20 @@ class DocxUtils():
 	def cleanText(self, text):
 		return re.sub('[^A-Za-z0-9\@\-\.\,\(\)\[\]\"\'\:\#\*\+\%]+', ' ', text)
 	
-	def getLink(self, text):
-		link = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
-		return re.findall(link, text)
+	def getLink(self):
+		# link = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+		links = []
+		for key in self.doc.part.rels.keys():
+			if self.doc.part.rels[key].is_external:
+				links.append(self.doc.part.rels[key]._target)
+		return links
 	
 	def getEmail(self, text):
 		email = re.compile(r'[a-z0-9\.\-+_\:\/]+@[a-z0-9\.\-+_]+\.[a-z]+')
 		return re.findall(email, text)
 
 	def getPhone(self, text):
-		phone = re.compile('\+[0-9]+')
+		phone = re.compile('\+?[0-9\ \-]{12,20}')
 		return re.findall(phone, text)
 
 	def getInfo(self, listOfParagraph:list):
@@ -92,8 +96,9 @@ class DocxUtils():
 		for p in listOfParagraph:
 			phone = self.getPhone(p.text)
 			email = self.getEmail(p.text)
-			link = self.getLink(p.text)
+			# link = self.getLink(p.text)
 			phones = phones+phone if len(phone)!=0 else phones
 			emails = emails+email if len(email)!=0 else emails
-			links = links+link if len(link)!=0 else links
+			# links = links+link if len(link)!=0 else links
+		links = self.getLink()
 		return phones, emails, links
