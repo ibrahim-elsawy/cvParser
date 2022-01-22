@@ -38,15 +38,17 @@ class Extraction():
 			for index in range(header[1]+1, headers[i+1][1]):
 				if header[0]!='info' and not self.process.cleanText(self.doc.paragraphs[index].text): 
 					sectionOfHeaders[header[0]] += [self.doc.paragraphs[index].text]
-		return sectionOfHeaders
+		return sectionOfHeaders, headers[0]
 	
 	def parseResume(self):
 
 		#FIXME summary is hardcoded !!!!!!!!!!!!
 		
-		data = self.extractSectionOfHeader()
+		data, header = self.extractSectionOfHeader()
 		if 'info' not in data:
 			phones, emails, links = self.dx.getInfo(self.doc.paragraphs)
 			data['info'] = emails + links + phones
-			return data
+		if 'summary' not in data:
+			summList = self.process.summ(self.doc.paragraphs, header)
+			data['summary'] = summList
 		return data
