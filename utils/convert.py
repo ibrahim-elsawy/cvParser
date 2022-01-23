@@ -14,7 +14,7 @@ import string
 # print("###################################################################")
 
 def random_string_generator(): 
-    chars = string.ascii_letters + string.punctuation
+    chars = string.ascii_letters 
     size = 12
     return ''.join(random.choice(chars) for x in range(size))
 

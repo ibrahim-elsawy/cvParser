@@ -4,7 +4,7 @@ import spacy
 
 class TextProcesing():
 	def __init__(self) -> None:
-		self.nlp = spacy.load("en_core_web_lg")
+		self.nlp = spacy.load("en_core_web_sm")
 	
 	def cleanText(self, text):
 		doc = self.nlp(text)

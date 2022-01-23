@@ -1,16 +1,16 @@
 from flask import Flask, request, jsonify
 import os
-from waitress import serve
+# from waitress import serve
 
 
-from docx import Document
 from utils.DataExtract import Extraction
 from utils.convert import convert_pdf_to_docx, random_string_generator
 
 ALLOWED_EXTENSIONS = {'docx', 'pdf'}
 # os.environ['ENV']= 'production'
 app = Flask(__name__)
-app.config['data_dir'] = os.environ.get("DATADIR")
+# app.config['data_dir'] = os.environ.get("DATADIR")
+app.config['data_dir'] = "./data"
 
 
 def allowed_file(filename):
@@ -20,9 +20,6 @@ def allowed_file(filename):
 		"type": extention
 		}
 
-# e = Extraction('./rdx.docx')
-
-# print(e.parseResume())
 
 @app.route('/summary', methods=['POST'])
 def summary():
@@ -47,6 +44,23 @@ def summary():
 				return jsonify(res)
 		except Exception as e:
 			return 400
+
+
+@app.route('/test', methods=['GET'])
+def text():
+	if request.method == 'GET':
+		try: 
+			return 200
+		except Exception as e:
+			return 400
+
+
 if __name__ == '__main__':
 	port = int(os.environ.get('PORT', 5000))
-	serve(app, host="0.0.0.0", port=port)
+	# name = "./data" + "/" + "test"
+	# convert_pdf_to_docx(name)
+	# e = Extraction(name+".docx") 
+	# res = e.parseResume()
+	# print(res)
+	app.run(host="0.0.0.0", port=port)
+	# serve(app, host="0.0.0.0", port=port)

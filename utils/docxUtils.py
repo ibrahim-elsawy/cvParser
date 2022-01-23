@@ -1,6 +1,4 @@
-from functools import reduce
 from docx import Document
-from docx.enum.style import WD_STYLE_TYPE, WD_STYLE
 import re
 
 from utils.Database import Database

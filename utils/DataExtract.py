@@ -48,6 +48,7 @@ class Extraction():
 		if 'info' not in data:
 			phones, emails, links = self.dx.getInfo(self.doc.paragraphs)
 			data['info'] = emails + links + phones
+			data['info'] = list(filter(lambda x : x.strip()!="", data['info']))
 		if 'summary' not in data:
 			summList = self.process.summ(self.doc.paragraphs, header)
 			data['summary'] = summList
