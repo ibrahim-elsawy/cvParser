@@ -26,7 +26,16 @@ class Database():
 		l = [list(row) for row in r]
 		conn.close()
 		return l
-	
+		
+	def readColumn(self, table_name, column_name):
+		l = []
+		conn = sqlite3.connect(self.dbname)
+		c = conn.cursor()
+		r = c.execute(f"SELECT {column_name} FROM {table_name}")
+		l = [row[0] for row in r if row[0]!=None ]
+		conn.close()
+		return l
+
 	def getNumRows(self, table_name):
 		conn = sqlite3.connect(self.dbname)
 		c = conn.cursor()

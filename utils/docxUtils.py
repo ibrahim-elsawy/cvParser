@@ -38,6 +38,12 @@ class DocxUtils():
 				headers.append(p.text)
 		return headers
 
+	def getWords(self):
+		words = []
+		for p in self.doc.paragraphs:
+			words += p.text.strip().split(' ')
+		return words
+
 	def searchDoc(self, listOfSearch:list, listOfParagraph:list, numRows:int):
 		headers = []
 		index = range(numRows)
@@ -58,8 +64,8 @@ class DocxUtils():
 		_headers = []
 		colNames = self.dx.getColumnsNames("points")
 		for i, e in enumerate(listOfSearch):
-			if isinstance(e, str) and e in text.lower() and len(text.split(' ')) < 3 and self.isHeaderExist(indexOfText, headers):
-				_headers.append([colNames[i], indexOfText])
+			if isinstance(e, str) and e in text.lower().strip() and len(text.strip().split(' ')) < 3 and self.isHeaderExist(indexOfText, headers):
+				_headers.append([colNames[i].strip(), indexOfText])
 		return _headers
 	
 	def isHeaderExist(self, currentIndex:int, headers:list):
@@ -69,7 +75,7 @@ class DocxUtils():
 		return True
 	
 	def cleanText(self, text):
-		return re.sub('[^A-Za-z0-9\@\-\.\,\(\)\[\]\"\'\:\#\*\+\%]+', ' ', text)
+		return re.sub('[^A-Za-z0-9\@\-\.\,\(\)\[\]\"\'\:\#\*\+\%\ ]+', ' ', text)
 	
 	def getLink(self):
 		# link = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')

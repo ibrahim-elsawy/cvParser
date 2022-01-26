@@ -12,6 +12,9 @@ app = Flask(__name__)
 # app.config['data_dir'] = os.environ.get("DATADIR")
 app.config['data_dir'] = "./data"
 
+def delFile(filename):
+	if os.path.exists(filename): 
+		os.remove(filename) # one file at a time
 
 def allowed_file(filename):
 	extention = filename.rsplit('.', 1)[1].lower()
