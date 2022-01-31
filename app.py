@@ -1,16 +1,16 @@
 from flask import Flask, request, jsonify
 import os
-# from waitress import serve
+from waitress import serve
 
 
 from utils.DataExtract import Extraction
 from utils.convert import convert_pdf_to_docx, random_string_generator
 
 ALLOWED_EXTENSIONS = {'docx', 'pdf'}
-# os.environ['ENV']= 'production'
+os.environ['ENV']= 'production'
 app = Flask(__name__)
-# app.config['data_dir'] = os.environ.get("DATADIR")
-app.config['data_dir'] = "./data"
+app.config['data_dir'] = os.environ.get("DATADIR")
+# app.config['data_dir'] = "./data"
 
 def delFile(filename):
 	if os.path.exists(filename): 
@@ -44,6 +44,8 @@ def summary():
 					file.save(filename)
 				e = Extraction(name+".docx")
 				res = e.parseResume()
+				delFile(name+".docx")
+				delFile(name+".pdf")
 				return jsonify(res)
 		except Exception as e:
 			return 400
@@ -65,5 +67,5 @@ if __name__ == '__main__':
 	# e = Extraction(name+".docx") 
 	# res = e.parseResume()
 	# print(res)
-	app.run(host="0.0.0.0", port=port)
-	# serve(app, host="0.0.0.0", port=port)
+	# app.run(host="0.0.0.0", port=port)
+	serve(app, host="0.0.0.0", port=port)

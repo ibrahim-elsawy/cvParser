@@ -6,7 +6,7 @@ from scipy import spatial
 
 class TextProcesing():
 	def __init__(self) -> None:
-		self.nlp = spacy.load("en_core_web_sm")
+		self.nlp = spacy.load("en_core_web_lg")
 		self.semanticModel = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
 	
