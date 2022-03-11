@@ -7,10 +7,9 @@ from utils.Database import Database
 
 
 class DocxUtils():
-	def __init__(self, filename) -> None: 
-		self.filename = filename
-		self.doc = Document(self.filename)
-		self.dx = Database("Resume.db")
+	def __init__(self, database, document) -> None: 
+		self.doc = document
+		self.dx = database
 
 	def getFonts(self):
 		fonts = set()

@@ -1,24 +1,25 @@
 import spacy
 from sentence_transformers import SentenceTransformer
-from scipy import spatial
+from scipy import spatial 
 
 
+NLP = spacy.load("en_core_web_lg") 
+SEMANTIC= SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
 class TextProcesing():
 	def __init__(self) -> None:
-		self.nlp = spacy.load("en_core_web_lg")
-		self.semanticModel = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+		pass
 
 	
 	def cleanText(self, text):
-		doc = self.nlp(text)
+		doc = NLP(text)
 		if len(doc.ents) == 0: return True
 		geoList = list(filter(lambda ent : ent.label_=='GPE', doc.ents))
 		numberList = list(filter(lambda ent : ent.label_=='CARDINAL', doc.ents))
 		return True if len(geoList) == len(doc.ents) or len(numberList)==len(doc.ents) else False
 
 	def sentence_similarity(self, w1, w2):
-		embeddings = self.semanticModel.encode([w1, w2])
+		embeddings = SEMANTIC.encode([w1, w2])
 		res = 1 - spatial.distance.cosine(embeddings[0], embeddings[1])
 		return True if res > 0.5 else False
 
@@ -41,7 +42,7 @@ class TextProcesing():
 	def summ(self, paragraphs,headers):
 		data = []
 		for i in range(0,len(paragraphs)): 
-			txt1= self.nlp(paragraphs[i].text) 
+			txt1= NLP(paragraphs[i].text) 
 			if len(txt1.ents)!=0 and txt1.ents[0].label_ == "PERSON" and i != headers[1]-1:
 				for e in paragraphs[i+1 : headers[1]]:
 					if e.text != "":

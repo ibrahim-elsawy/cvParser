@@ -14,4 +14,4 @@ RUN apt update -y ;\
 
 EXPOSE 5000
 
-CMD ["pyuwsgi", "--ini", "app.ini"]
+CMD ["python3", "-m", "flask", "run", "--host=0.0.0.0"]

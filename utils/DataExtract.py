@@ -12,8 +12,8 @@ class Extraction():
 	def __init__(self, filename:str) -> None:
 		self.filename = filename
 		self.doc = Document(self.filename)
-		self.dx = DocxUtils(self.filename)
 		self.data = Database('Resume.db')
+		self.dx = DocxUtils(database=self.data, document=self.doc)
 		self.process = TextProcesing()
 		self.TABLENAME = "points"
 		# self.QUERY = ["skills", "experience", "characteristics", "summary-objective", "education", "hobbies", "info"]
