@@ -1,5 +1,10 @@
+import io
 from docx import Document
 import re
+import fitz
+from PIL import Image
+
+from transformers import load_pytorch_weights_in_tf2_model
 
 from utils.Database import Database
 
@@ -7,9 +12,10 @@ from utils.Database import Database
 
 
 class DocxUtils():
-	def __init__(self, database, document) -> None: 
+	def __init__(self, database, document, pdfName) -> None: 
 		self.doc = document
 		self.dx = database
+		self.fitzObject = fitz.open(pdfName)
 
 	def getFonts(self):
 		fonts = set()
@@ -37,6 +43,36 @@ class DocxUtils():
 				headers.append(p.text)
 		return headers
 
+	def isTextEmpty(self, listOfParagraph:list):
+		countOfEmptyText = 0
+		for p in listOfParagraph:
+			if p.text.strip() == '':
+				countOfEmptyText = countOfEmptyText + 1
+			if countOfEmptyText/len(listOfParagraph) > 0.7:
+				return True
+		return False
+
+	def getTextFromImage(self):
+		# iterate over PDF pages 
+		for page_index in range(len(self.fitzObject)): 
+			# get the page itself 
+			page = self.fitzObject[page_index] 
+			image_list = page.getImageList() 
+			# printing number of images found in this page
+			if image_list: 
+				print(f"[+] Found a total of {len(image_list)} images in page {page_index}") 
+			else: 
+				print("[!] No images found on page", page_index) 
+			for image_index, img in enumerate(page.getImageList(), start=1): 
+				# get the XREF of the image
+				xref = img[0] 
+				# extract the image bytes
+				base_image = self.fitzObject.extractImage(xref) 
+				image_bytes = base_image["image"] 
+				img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+				# get the image extension
+				# image_ext = base_image["ext"]
+
 	def getWords(self):
 		words = []
 		for p in self.doc.paragraphs:
@@ -47,8 +83,9 @@ class DocxUtils():
 		headers = []
 		index = range(numRows)
 		for indexOfPara, p in enumerate(listOfParagraph):
-			if p.text == '':
+			if p.text == '': 
 				continue
+
 			for i in index: 
 				# header = list(filter(lambda e: isinstance(e, str) and e in p.text.lower() and len(p.text.split(' ')) < 4, listOfSearch[i]))
 				try:

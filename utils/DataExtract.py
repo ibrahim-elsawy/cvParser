@@ -13,7 +13,7 @@ class Extraction():
 		self.filename = filename
 		self.doc = Document(self.filename)
 		self.data = Database('Resume.db')
-		self.dx = DocxUtils(database=self.data, document=self.doc)
+		self.dx = DocxUtils(database=self.data, document=self.doc, pdfName=self.filename.replace('docx', 'pdf'))
 		self.process = TextProcesing()
 		self.TABLENAME = "points"
 		# self.QUERY = ["skills", "experience", "characteristics", "summary-objective", "education", "hobbies", "info"]
@@ -44,8 +44,11 @@ class Extraction():
 			"info, contact"
 		]
 		return colNames, query
+	def extractSectionOfHeadersV3(self):
+		
+		pass
 
-	def extractHeadersV2(self):
+	def extractSectionOfHeadersV2(self):
 		colNames, queries = self.getQueries()
 		words = self.dx.getWords()
 		sectionOfHeader = {}
@@ -59,7 +62,8 @@ class Extraction():
 			elif len(list(sectionOfHeader.keys())) > 0: 
 				header = list(sectionOfHeader.keys())[-1] 
 				sectionOfHeader[header] += " " + word
-		return sectionOfHeader, sectionOfHeader[list(sectionOfHeader.keys())[0]]
+		# return sectionOfHeader, sectionOfHeader[list(sectionOfHeader.keys())[0]] if len(sectionOfHeader.keys())>0 else None
+		return sectionOfHeader, sectionOfHeader[list(sectionOfHeader.keys())[0]] 
 
 
 	def extractSectionOfHeader(self):
@@ -89,7 +93,7 @@ class Extraction():
 		
 		data, header = self.extractSectionOfHeader()
 		if len(list(data.keys()))<2 or header == None: 
-			data, header = self.extractHeadersV2()
+			data, header = self.extractSectionOfHeadersV2()
 		if 'info' not in data:
 			phones, emails, links = self.dx.getInfo(self.doc.paragraphs)
 			data['info'] = emails + links + phones
